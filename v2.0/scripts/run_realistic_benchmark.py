@@ -10,7 +10,7 @@ from pathlib import Path
 import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SRC_ROOT = PROJECT_ROOT / "phd_realistic_sentiment" / "src"
+SRC_ROOT = PROJECT_ROOT / "v2.0" / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
@@ -40,7 +40,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--output-dir",
-        default="phd_realistic_sentiment/outputs/realistic_benchmark_pack",
+        default="v2.0/outputs/realistic_benchmark_pack",
         help="Directory to write the benchmark artifacts into.",
     )
     parser.add_argument(

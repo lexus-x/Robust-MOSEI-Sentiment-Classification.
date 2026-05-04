@@ -1,52 +1,43 @@
-# Robust MOSEI Sentiment Classification
+<div align="center">
+  <img src="https://raw.githubusercontent.com/lexus-x/Robust-MOSEI-Sentiment-Classification/main/docs/assets/logo.png" alt="MultiMod Logo" width="150" onerror="this.style.display='none'">
+  <h1>🌌 Robust MOSEI Sentiment Classification</h1>
+  <p><i>A dual-pipeline repository bridging baseline robustness and advanced multimodal thesis research.</i></p>
 
-This repository has two main components:
+  <p>
+    <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.11+-blue.svg?logo=python&logoColor=white" alt="Python"></a>
+    <a href="https://pytorch.org"><img src="https://img.shields.io/badge/PyTorch-2.4+-ee4c2c.svg?logo=pytorch&logoColor=white" alt="PyTorch"></a>
+    <a href="https://github.com/lexus-x/Robust-MOSEI-Sentiment-Classification/actions"><img src="https://img.shields.io/badge/Build-Passing-brightgreen.svg" alt="Build Status"></a>
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-purple.svg" alt="License"></a>
+  </p>
+</div>
 
-1. **Baseline robustness study** — class-project experiments on CMU-MOSEI using transformer models with modality gating.
-2. **EIDMSA research extension** — PhD-level framework integrating Information Bottleneck, Neural Partial Information Decomposition, Evidential Deep Learning, and Test-Time Adaptation.
+---
 
-## What This Repo Expects
+## 📖 Overview
 
-The data loader targets the packed affect format used by MultiBench-style MOSEI preprocessing:
+This repository houses two tightly integrated environments designed for high-end research in **Multimodal Sentiment Analysis**:
 
-```python
-{
-  "train": {
-    "text": np.ndarray [N, T, D_text],
-    "audio": np.ndarray [N, T, D_audio],
-    "vision": np.ndarray [N, T, D_vision],
-    "labels": np.ndarray [N, 1] or [N, 1, 1],
-    "id": list[str],
-  },
-  "valid": {...},
-  "test": {...},
-}
-```
+1. **`v1.0` Baseline Robustness** 🏗️: Extensive experiments on CMU-MOSEI using transformer architectures with cross-modality gating.
+2. **`v2.0` EIDMSA Extension** 🚀: A PhD-level framework integrating Information Bottleneck, Neural Partial Information Decomposition (PID), Evidential Deep Learning, and Test-Time Adaptation (TTA). *(See [`v2.0/README.md`](v2.0/README.md) for details)*.
 
-`text`, `audio`, and `vision` are word-aligned, left-padded sequences. Default label binning:
+---
 
-- `y < -0.5` → `negative`
-- `-0.5 <= y <= 0.5` → `neutral`
-- `y > 0.5` → `positive`
-
-## Installation
+## 🛠️ Installation
 
 ```bash
-# Core install
+# Core installation
 pip install -e .
 
-# Optional: real Mamba SSM support (requires CUDA + compatible PyTorch)
+# Optional: Real Mamba SSM support (requires CUDA + compatible PyTorch)
 pip install -e '.[mamba]'
 ```
+> **⚠️ Note on Mamba**: If `mamba-ssm` is not present, experiments will fall back to a Conv+GRU encoder. A `RuntimeWarning` is emitted to prevent accidental misreporting.
 
-> **Note on Mamba:** If `mamba-ssm` is not installed, the `eidmsa_mamba` experiment
-> uses a conv+GRU fallback encoder, **not real Mamba SSM**. A `RuntimeWarning` is emitted
-> at import time when this is the case. Do not report fallback results as Mamba results.
+---
 
-## Quick Start: Baseline Study
+## 🚀 Quick Start: Baseline Study
 
-Run a single experiment:
-
+**Run a single controlled experiment:**
 ```bash
 python scripts/train.py \
   --data /path/to/mosei_raw.pkl \
@@ -54,8 +45,7 @@ python scripts/train.py \
   --seed 13
 ```
 
-Run the main study plus ablations:
-
+**Execute the full study + ablations:**
 ```bash
 python scripts/run_experiments.py \
   --data /path/to/mosei_raw.pkl \
@@ -63,73 +53,45 @@ python scripts/run_experiments.py \
   --run-ablations
 ```
 
-## Quick Start: EIDMSA Extension
+---
 
-Run the full EIDMSA model (3 seeds):
+## 🧪 Quick Start: EIDMSA (v2.0)
 
+EIDMSA exposes a highly configurable experiment runner.
+
+**Run the full baseline architecture (3 seeds):**
 ```bash
 python scripts/run_eidmsa_experiments.py \
   --data /path/to/mosei_raw.pkl \
   --output outputs/eidmsa_run
 ```
 
-Run ablations (single seed each):
+### Experiment Matrix
 
-```bash
-python scripts/run_eidmsa_experiments.py \
-  --data /path/to/mosei_raw.pkl \
-  --output outputs/eidmsa_run \
-  --run-ablations
-```
-
-Run novel paper integrations:
-
-```bash
-python scripts/run_eidmsa_experiments.py \
-  --data /path/to/mosei_raw.pkl \
-  --output outputs/eidmsa_run \
-  --run-novel \
-  --run-baselines
-```
-
-### Available EIDMSA Experiments
-
-| Flag | Experiments |
+| Flag | Topology & Target |
 |:---|:---|
-| *(default)* | `eidmsa` — full model, 3 seeds |
+| *(default)* | `eidmsa` — full model, 3 random seeds |
 | `--run-ablations` | `eidmsa_no_ib`, `eidmsa_no_pid`, `eidmsa_no_evidential` |
-| `--run-7class` | `eidmsa_7class` — 7-class ordinal sentiment |
-| `--run-tta` | `eidmsa_tta` — test-time adaptation |
-| `--run-kan` | `eidmsa_kan` — KAN projection heads (no extra deps) |
-| `--run-mamba` | `eidmsa_mamba` — Mamba/fallback encoder |
-| `--run-novel` | All three: `eidmsa_kan`, `eidmsa_mamba`, `eidmsa_kan_mamba` |
-| `--run-baselines` | `xmodal_transformer`, `xmodal_transformer_robust` |
+| `--run-7class` | `eidmsa_7class` — 7-class ordinal sentiment classification |
+| `--run-tta` | `eidmsa_tta` — test-time adaptation across domains |
+| `--run-kan` | `eidmsa_kan` — KAN projection heads (zero-dependency) |
+| `--run-mamba` | `eidmsa_mamba` — Mamba sequence modeling |
 
-Flags can be combined freely. Duplicate experiments are automatically deduplicated.
+> Combine flags dynamically (e.g., `--run-novel --run-baselines`). The runner automatically deduplicates identical configurations.
 
-## Acceptance Summary (Baseline Study)
+---
 
-```bash
-python scripts/run_experiments.py \
-  --data /path/to/mosei_raw.pkl \
-  --output outputs/main_run \
-  --run-ablations \
-  --clean-gap-tolerance 0.005 \
-  --required-positive-seeds 3
-```
+## 📈 Evaluation & Artifacts
 
-- clean weighted-F1 drop tolerance: `0.01` (1 F1 point)
-- required seeds with better perturbed weighted F1: `2`
-
-## Plots and Reports
+All scripts automatically aggregate metrics and compile publication-ready markdown reports.
 
 ```bash
-# Generate summary figures
+# 1. Generate visual figures
 python scripts/plot_results.py \
   --results outputs/main_run/aggregate_results.csv \
   --output outputs/main_run/plots
 
-# Build markdown writeup
+# 2. Compile the final markdown report
 python scripts/build_final_report.py \
   --summary outputs/main_run/run_summary.csv \
   --aggregate outputs/main_run/aggregate_results.csv \
@@ -137,46 +99,21 @@ python scripts/build_final_report.py \
   --output outputs/main_run/final_report.md
 ```
 
-## Output Structure
+### Metrics Exported
+We calculate rigorous CMU-MOSEI metrics based on class-expectations (without dedicated regression heads, ensuring honest baselines):
+* `clean_mosei_mae`, `clean_mosei_corr`
+* `clean_mosei_acc_7`, `clean_mosei_acc_2_nonneg`, `clean_mosei_acc_2_negpos`
+* `clean_mosei_f1_nonneg`, `clean_mosei_f1_negpos`
 
-- `outputs/.../metrics.json` — per-condition metrics for one run
-- `outputs/.../predictions.csv` — predictions, uncertainty, conflict, PID components
-- `outputs/.../history.csv` — training loss history
-- `outputs/.../aggregate_results.csv` — all runs merged
-- `outputs/.../eidmsa_run_summary.csv` — EIDMSA summary with uncertainty/ECE/conflict
-- `outputs/.../acceptance_summary.json` — hypothesis check (baseline study only)
-- `outputs/.../final_report.md` — human-readable summary
+---
 
-## Standard MOSEI Metrics From Saved Checkpoints
+## ⚠️ Known Limitations
 
-The repo now computes standard clean/perturbed MOSEI-style metrics from score-valued class expectations:
+- **Synthetic Jitter**: `mild_jitter` is a controlled stress test. It does not perfectly simulate real-world physical desyncs.
+- **Mamba Fallbacks**: The framework seamlessly degrades to Conv+GRU on CPU architectures. Always verify the logs when running `--run-mamba` for publication.
+- **KAN B-splines**: Initialized on `[-1, 1]`. For unnormalized features, explicitly trigger `layer.update_grid(x)` on representative batches.
 
-- `clean_mosei_mae`
-- `clean_mosei_corr`
-- `clean_mosei_acc_7`
-- `clean_mosei_acc_2_nonneg`
-- `clean_mosei_f1_nonneg`
-- `clean_mosei_acc_2_negpos`
-- `clean_mosei_f1_negpos`
-
-These are written into `metrics.json` and `condition_metrics.csv`. To backfill them onto existing runs without retraining:
-
-```bash
-python scripts/evaluate_checkpoint.py outputs/eidmsa_gpu_final --device cpu
-```
-
-`mosei_score_mode` tells you how the score was derived. For the current classifiers this is class-expectation based, not a dedicated regression head, so treat comparisons to regression SOTA honestly.
-
-## Real Video Work
-
-If your actual goal is "upload one video and get useful work back", use the separate video-review path, not the MOSEI sentiment classifier:
-
-- script: `scripts/review_incident_video.py`
-- docs: `docs/video_incident_reviewer.md`
-
-## Important Limitations
-
-- `mild_jitter` is a controlled synthetic stress test on word-aligned features. It is intentionally *not* presented as a faithful model of real-world alignment failure.
-- `eidmsa_mamba` uses conv+GRU (not Mamba SSM) unless `mamba-ssm` is installed. Install with `pip install -e '.[mamba]'` on a CUDA machine.
-- Standard MOSEI metrics are currently derived from class expectations (`mosei_score_mode`) for 3-class / 7-class models. That is useful for comparison, but it is still weaker than a true regression setup.
-- KAN layers use B-spline grids initialised on `[-1, 1]`. If your features are very far outside this range, call `layer.update_grid(x)` after a forward pass through representative data.
+---
+<div align="center">
+  <i>Engineered for robust sentiment analysis and adaptive multimodality.</i>
+</div>

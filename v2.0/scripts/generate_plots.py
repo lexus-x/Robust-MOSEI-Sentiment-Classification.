@@ -5,8 +5,8 @@ import pandas as pd
 from pathlib import Path
 
 def generate_plots():
-    summary_path = Path("phd_realistic_sentiment/outputs/thesis_pack/comparison_summary.json")
-    out_dir = Path("phd_realistic_sentiment/outputs/thesis_pack/figures")
+    summary_path = Path("v2.0/outputs/thesis_pack/comparison_summary.json")
+    out_dir = Path("v2.0/outputs/thesis_pack/figures")
     out_dir.mkdir(parents=True, exist_ok=True)
     
     with open(summary_path) as f:
@@ -73,4 +73,4 @@ def generate_plots():
 
 if __name__ == "__main__":
     generate_plots()
-    print("Plots generated in phd_realistic_sentiment/outputs/thesis_pack/figures/")
+    print("Plots generated in v2.0/outputs/thesis_pack/figures/")
