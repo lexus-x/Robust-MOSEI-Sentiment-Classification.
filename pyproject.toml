@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "multimod"
+version = "0.1.0"
+description = "Modality gating experiments for robust CMU-MOSEI sentiment classification."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2.0",
+  "torch>=2.6",
+  "scikit-learn>=1.6",
+  "pandas>=2.2",
+  "matplotlib>=3.10",
+  "pyyaml>=6.0",
+  "h5py>=3.12",
+]
+
+[project.optional-dependencies]
+mamba = ["mamba-ssm>=2.0", "causal-conv1d>=1.2"]
+video = ["google-genai>=1.0.0"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

@@ -1,0 +1,64 @@
+experiment_name: eidmsa_robust_v2
+data:
+  data_path: data/mosei_raw.pkl
+  batch_size: 32
+  num_workers: 0
+  max_seq_len: null
+  lower_threshold: -0.5
+  upper_threshold: 0.5
+  label_mode: 3class
+  conditions:
+    - clean
+    - missing_audio
+    - missing_vision
+    - missing_audio_vision
+    - mild_jitter
+model:
+  name: eidmsa
+  hidden_dim: 128
+  num_layers: 2
+  num_heads: 4
+  dropout: 0.1
+  num_classes: 3
+  use_gating: false
+  # Standard robustness training
+  modality_dropout_p: 0.2
+  jitter_prob: 0.3
+  # Vision-heavy augmentation — key fix for block_missing_vision::severe
+  audio_dropout_p: 0.15
+  vision_dropout_p: 0.45
+  realistic_corruption_p: 0.55
+  # EIDMSA parameters
+  latent_dim: 64
+  ib_beta: 0.001
+  pid_weight: 0.1
+  use_evidential_loss: true
+  evidential_warmup_epochs: 5
+  # Alignment: encourage consistency between clean and corrupted predictions
+  alignment_weight: 0.12
+  # TTA disabled for training
+  use_tta: false
+  tta_lr: 0.0001
+  tta_steps: 3
+  # No novel integrations
+  use_kan: false
+  use_mamba: false
+  kan_grid_size: 5
+  kan_reg_weight: 0.0001
+training:
+  learning_rate: 0.0001
+  weight_decay: 0.01
+  max_epochs: 40
+  patience: 7
+  gradient_clip: 1.0
+  seeds:
+    - 13
+    - 17
+    - 23
+output_dir: outputs/eidmsa_robust_v2
+save_predictions: true
+diagnostics_examples: 2
+notes: >-
+  EIDMSA robust v2: aggressive vision dropout (0.45), high realistic corruption
+  probability (0.55), clean-to-corrupted alignment (0.12), evidential warmup (5 epochs).
+  Designed to close the block_missing_vision::severe gap.
