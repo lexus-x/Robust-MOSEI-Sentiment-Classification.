@@ -117,3 +117,5 @@ We calculate rigorous CMU-MOSEI metrics based on class-expectations (without ded
 <div align="center">
   <i>Engineered for robust sentiment analysis and adaptive multimodality.</i>
 </div>
+## Authors
+* **ZHANG MING** - *AI PhD Candidate, Changwon National University*
